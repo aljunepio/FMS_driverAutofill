@@ -71,7 +71,7 @@
   }
 
   const companyIndexMap = {
-    "ADNOC GAS": {
+    ADNOC_GAS: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
@@ -80,8 +80,12 @@
       driverLiceID: 13,
       dlExpiration: 14,
       email: 8,
+      position: 12,
+      site: 6,
+      division: 5,
+      adsdExpiration: 15,
     },
-    "Borouge": {
+    BOROUGE: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
@@ -90,8 +94,12 @@
       driverLiceID: 10,
       dlExpiration: 11,
       email: 9,
+      position: 12,
+      site: 6,
+      division: 5,
+      adsdExpiration: 15,
     },
-    "ADNOC_HQ": {
+    ADNOC_HQ: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
@@ -100,6 +108,10 @@
       driverLiceID: 11,
       dlExpiration: 12,
       email: 8,
+      position: 13,
+      site: 6,
+      division: 5,
+      adsdExpiration: 15,
     },
   };
 
@@ -256,21 +268,23 @@
       const rule = getCompanyRule(tokens);
 
       const phoneOriginal = rule
-        ? getTokenAt(tokens, rule.phoneOriginal - 1)
+        ? getTokenAt(tokens, rule.phoneOriginal)
         : getTokenAt(tokens, 2);
-      const expiryToken = rule ? getTokenAt(tokens, rule.dlExpiration - 1) : "";
-      const email = rule ? getTokenAt(tokens, rule.email - 1) : "";
+      const expiryToken = rule ? getTokenAt(tokens, rule.dlExpiration) : "";
+      const email = rule ? getTokenAt(tokens, rule.email) : "";
       const nameOriginal = rule
-        ? getTokenAt(tokens, rule.nameOriginal - 1)
+        ? getTokenAt(tokens, rule.nameOriginal)
         : getTokenAt(tokens, 1);
-      const employeeID = rule ? getTokenAt(tokens, rule.employeeID - 1) : "";
-      const extendedID = rule ? getTokenAt(tokens, rule.extendedID - 1) : "";
-      const driverLiceID = rule
-        ? getTokenAt(tokens, rule.driverLiceID - 1)
-        : "";
+      const employeeID = rule ? getTokenAt(tokens, rule.employeeID) : "";
+      const extendedID = rule ? getTokenAt(tokens, rule.extendedID) : "";
+      const driverLiceID = rule ? getTokenAt(tokens, rule.driverLiceID) : "";
+      const position = rule ? getTokenAt(tokens, rule.position) : "";
+      const site = rule ? getTokenAt(tokens, rule.site) : "";
+      const division = rule ? getTokenAt(tokens, rule.division) : "";
+      const adsdExpiration = rule ? getTokenAt(tokens, rule.adsdExpiration) : "";
 
       let data = {
-        id: rule ? getTokenAt(tokens, rule.id - 1) : getTokenAt(tokens, 0),
+        id: rule ? getTokenAt(tokens, rule.id) : getTokenAt(tokens, 1),
         name: `${nameOriginal}${employeeID ? `-${employeeID}` : `-${phoneOriginal}`}`,
         nameOriginal,
         extendedID,
@@ -283,7 +297,10 @@
         companyLabel:
           tokens.find((token) => /ADNOC GAS|BOROUGE|ADNOC HQ/i.test(token)) ||
           "",
-        mode: getTokenAt(tokens, 12) || getTokenAt(tokens, 15) || "",
+        position,
+        site,
+        division,
+        adsdExpiration,
       };
 
       // Mapping to Selectors
@@ -296,21 +313,24 @@
         "#basicInfo_licenseExpiration",
       );
       const driverLiceInput = document.querySelector("#basicInfo_licenseCode");
-      const notifEmailInput = document.querySelector(
-        "#basicInfo_notificationEmails",
-      );
+      // const notifEmailInput = document.querySelector(
+      //   "#basicInfo_notificationEmails",
+      // );
       const employeeIDInput = getDynamicInputByLabel("Employee ID");
       const driverMobileInput = getDynamicInputByLabel("Driver Mobile");
       const uIDInput = getDynamicInputByLabel("UID Number");
-      const modeInput = getDynamicInputByLabel("Mode");
+      const positionInput = getDynamicInputByLabel("Position");
+      const siteInput = getDynamicInputByLabel("Site");
+      const divisionInput = getDynamicInputByLabel("Division");
+      const adsdExpireInput = getDynamicInputByLabel("ADSD expiry date");
+      const notiEmailInput = getDynamicInputByLabel("Notification Emails");
 
       if (idInput) {
         idInput.value = data.id;
         dispatchEvents(idInput);
       }
       if (nameInput) {
-        nameInput.value =
-          data.name + (data.phoneOriginal ? ` - ${data.phoneOriginal}` : "");
+        nameInput.value = data.name;
         dispatchEvents(nameInput);
       }
       if (extendInput) {
@@ -333,9 +353,9 @@
         driverLiceInput.value = data.driverLiceID;
         dispatchEvents(driverLiceInput);
       }
-      if (notifEmailInput) {
-        notifEmailInput.value = data.email;
-        dispatchEvents(notifEmailInput);
+      if (notiEmailInput) {
+        notiEmailInput.value = data.email;
+        dispatchEvents(notiEmailInput);
       }
       if (employeeIDInput) {
         employeeIDInput.value = data.employeeID;
@@ -349,9 +369,21 @@
         uIDInput.value = data.extendedID;
         dispatchEvents(uIDInput);
       }
-      if (modeInput && data.mode) {
-        modeInput.value = data.mode;
-        dispatchEvents(modeInput);
+      if (positionInput && data.position) {
+        positionInput.value = data.position;
+        dispatchEvents(positionInput);
+      }
+      if (siteInput && data.site) {
+        siteInput.value = data.site;
+        dispatchEvents(siteInput);
+      }
+      if (divisionInput && data.division) {
+        divisionInput.value = data.division;
+        dispatchEvents(divisionInput);
+      }
+      if (adsdExpireInput && data.adsdExpiration) {
+        adsdExpireInput.value = data.adsdExpiration;
+        dispatchEvents(adsdExpireInput);
       }
 
       logPasteAction(data);
