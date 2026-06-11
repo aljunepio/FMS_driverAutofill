@@ -93,11 +93,11 @@
       phoneOriginal: 3,
       driverLiceID: 10,
       dlExpiration: 11,
-      email: 9,
-      position: 12,
-      site: 6,
+      email: 8,
+      position: 13,
+      site: "",
       division: 5,
-      adsdExpiration: 15,
+      adsdExpiration: 14,
     },
     ADNOC_HQ: {
       id: 1,
@@ -109,9 +109,163 @@
       dlExpiration: 12,
       email: 8,
       position: 13,
+      site: "",
+      division: 6,
+      adsdExpiration: 14,
+    },
+    ADNOC_LNG_OFFSHORE: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 8,
+      phoneOriginal: 3,
+      driverLiceID: 10,
+      dlExpiration: 11,
+      email: 12,
+      position: 9,
+      site: 5,
+      division: 6,
+      adsdExpiration: 13,
+    },
+    ADNOC_LOGISTIC_SERVICES: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 11,
+      phoneOriginal: 3,
+      driverLiceID: 13,
+      dlExpiration: 14,
+      email: 9,
+      position: 12,
+      site: 7,
+      division: 6,
+      adsdExpiration: 15,
+    },
+    ADNOC_OFFSHORE: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 10,
+      phoneOriginal: 3,
+      driverLiceID: 12,
+      dlExpiration: 13,
+      email: 11,
+      position: 9,
+      site: 8,
+      division: 5,
+      adsdExpiration: 14,
+    },
+    ADNOC_REFINING: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 8,
+      phoneOriginal: 3,
+      driverLiceID: 12,
+      dlExpiration: 13,
+      email: 10,
+      position: 9,
       site: 6,
       division: 5,
-      adsdExpiration: 15,
+      adsdExpiration: 14,
+    },
+    ADNOC_FERTILE: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 8,
+      phoneOriginal: 3,
+      driverLiceID: 9,
+      dlExpiration: 10,
+      email: 11,
+      position: 9,
+      site: 6,
+      division: 6,
+      adsdExpiration: 11,
+    },
+    ADNOC_ONSHORE: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 9,
+      phoneOriginal: 3,
+      driverLiceID: 11,
+      dlExpiration: 12,
+      email: 8,
+      position: 10,
+      site: 6,
+      division: 5,
+      adsdExpiration: 13,
+    },
+    ADNOC_GT: {
+      id: 0,
+      nameOriginal: 1,
+      employeeID: 3,
+      extendedID: 6,
+      phoneOriginal: 2,
+      driverLiceID: "",
+      dlExpiration: "",
+      email: "",
+      position: 4,
+      site: 4,
+      division: 4,
+      adsdExpiration: "",
+    },
+    ADNOC_ATA: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 7,
+      phoneOriginal: 3,
+      driverLiceID: 12,
+      dlExpiration: 13,
+      email: "",
+      position: 8,
+      site: 5,
+      division: 5,
+      adsdExpiration: "",
+    },
+    ALDHAFRA_PETROLEUM: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 7,
+      phoneOriginal: 3,
+      driverLiceID: 12,
+      dlExpiration: 13,
+      email: 10,
+      position: 9,
+      site: 5,
+      division: 5,
+      adsdExpiration: 14,
+    },
+    ADOC_JAPAN: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 8,
+      phoneOriginal: 3,
+      driverLiceID: 10,
+      dlExpiration: 11,
+      email: 9,
+      position: 12,
+      site: 6,
+      division: 5,
+      adsdExpiration: 14,
+    },
+    AL_MARIAH: {
+      id: 1,
+      nameOriginal: 3,
+      employeeID: 4,
+      extendedID: 6,
+      phoneOriginal: 5,
+      driverLiceID: 9,
+      dlExpiration: 10,
+      email: "",
+      position: 8,
+      site: 7,
+      division: 7,
+      adsdExpiration: 11,
     },
   };
 
@@ -124,8 +278,22 @@
   }
 
   function getCompanyRule(tokens) {
-    const label = (tokens[5] || "").trim();
-    return companyIndexMap[normalizeCompanyKey(label)] || null;
+    const candidateLabels = [tokens[5], tokens[6], tokens[7]].filter(Boolean);
+    for (const token of candidateLabels) {
+      const key = normalizeCompanyKey(token);
+      if (companyIndexMap[key]) {
+        return { rule: companyIndexMap[key], companyLabel: token.trim() };
+      }
+    }
+
+    for (const token of tokens) {
+      const key = normalizeCompanyKey(token);
+      if (companyIndexMap[key]) {
+        return { rule: companyIndexMap[key], companyLabel: token.trim() };
+      }
+    }
+
+    return { rule: null, companyLabel: tokens[5] ? tokens[5].trim() : "" };
   }
 
   function normalizeDate(value) {
@@ -150,8 +318,9 @@
     if (monthYearMatch) {
       const [, monthText, yearText] = monthYearMatch;
       const monthNum = months[monthText.toLowerCase()];
-      if (monthNum)
+      if (monthNum) {
         return `01/${monthNum}/${yearText.length === 2 ? "20" + yearText : yearText}`;
+      }
     }
 
     const alphaMatch = value.match(
@@ -160,8 +329,9 @@
     if (alphaMatch) {
       const [, day, monthText, yearText] = alphaMatch;
       const monthNum = months[monthText.toLowerCase()];
-      if (monthNum)
+      if (monthNum) {
         return `${day.padStart(2, "0")}/${monthNum}/${yearText.length === 2 ? "20" + yearText : yearText}`;
+      }
     }
 
     const numericMatch = value.match(/^(\d{1,4})[\/-](\d{1,2})[\/-](\d{1,4})$/);
@@ -265,23 +435,27 @@
       const tokens = raw
         .split(/\t/)
         .map((t) => t.replace(/\u00A0/g, " ").trim());
-      const rule = getCompanyRule(tokens);
+      const { rule, companyLabel } = getCompanyRule(tokens);
 
       const phoneOriginal = rule
         ? getTokenAt(tokens, rule.phoneOriginal)
-        : getTokenAt(tokens, 2);
-      const expiryToken = rule ? getTokenAt(tokens, rule.dlExpiration) : "";
+        : getTokenAt(tokens, 3);
+      const expiryDLicense = rule ? getTokenAt(tokens, rule.dlExpiration) : "";
       const email = rule ? getTokenAt(tokens, rule.email) : "";
       const nameOriginal = rule
         ? getTokenAt(tokens, rule.nameOriginal)
-        : getTokenAt(tokens, 1);
-      const employeeID = rule ? getTokenAt(tokens, rule.employeeID) : "";
+        : getTokenAt(tokens, 2);
+      const employeeID = rule
+        ? getTokenAt(tokens, rule.employeeID)
+        : getTokenAt(tokens, 4);
       const extendedID = rule ? getTokenAt(tokens, rule.extendedID) : "";
       const driverLiceID = rule ? getTokenAt(tokens, rule.driverLiceID) : "";
       const position = rule ? getTokenAt(tokens, rule.position) : "";
       const site = rule ? getTokenAt(tokens, rule.site) : "";
       const division = rule ? getTokenAt(tokens, rule.division) : "";
-      const adsdExpiration = rule ? getTokenAt(tokens, rule.adsdExpiration) : "";
+      const adsdExpiration = rule
+        ? getTokenAt(tokens, rule.adsdExpiration)
+        : "";
 
       let data = {
         id: rule ? getTokenAt(tokens, rule.id) : getTokenAt(tokens, 1),
@@ -293,10 +467,8 @@
         employeeID,
         driverLiceID,
         email,
-        dlExpiration: normalizeDate(expiryToken),
-        companyLabel:
-          tokens.find((token) => /ADNOC GAS|BOROUGE|ADNOC HQ/i.test(token)) ||
-          "",
+        dlExpiration: normalizeDate(expiryDLicense),
+        companyLabel: companyLabel || "",
         position,
         site,
         division,
@@ -385,6 +557,8 @@
         adsdExpireInput.value = data.adsdExpiration;
         dispatchEvents(adsdExpireInput);
       }
+
+      alert(`Index[5] value: "${getTokenAt(tokens, 5)}"\nDetected company: "${companyLabel || "Unknown"}"\nID: ${data.id}\nName: ${data.nameOriginal}\nPhone: ${data.phoneOriginal}\nEmail: ${data.email}`);
 
       logPasteAction(data);
 
