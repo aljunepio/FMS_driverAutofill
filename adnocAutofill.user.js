@@ -314,23 +314,26 @@
       dec: "12",
     };
 
+    const formatDate = (day, month, year) => {
+      const normalizedYear = year.length === 2 ? `20${year}` : year;
+      return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${normalizedYear}`;
+    };
+
     const monthYearMatch = value.match(/^([a-zA-Z]{3})[\/\- ](\d{2,4})$/);
     if (monthYearMatch) {
       const [, monthText, yearText] = monthYearMatch;
       const monthNum = months[monthText.toLowerCase()];
       if (monthNum) {
-        return `01/${monthNum}/${yearText.length === 2 ? "20" + yearText : yearText}`;
+        return formatDate("01", monthNum, yearText);
       }
     }
 
-    const alphaMatch = value.match(
-      /^(\d{1,2})[\/\- ]([a-zA-Z]{3})[\/\- ](\d{2,4})$/,
-    );
+    const alphaMatch = value.match(/^(\d{1,2})[\/\- ]([a-zA-Z]{3})[\/\- ](\d{2,4})$/);
     if (alphaMatch) {
       const [, day, monthText, yearText] = alphaMatch;
       const monthNum = months[monthText.toLowerCase()];
       if (monthNum) {
-        return `${day.padStart(2, "0")}/${monthNum}/${yearText.length === 2 ? "20" + yearText : yearText}`;
+        return formatDate(day, monthNum, yearText);
       }
     }
 
@@ -338,7 +341,7 @@
     if (numericMatch) {
       const [, a, b, c] = numericMatch;
       const [year, month, day] = a.length === 4 ? [a, b, c] : [c, b, a];
-      return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year.length === 2 ? "20" + year : year}`;
+      return formatDate(day, month, year);
     }
 
     return value;
@@ -459,7 +462,7 @@
 
       let data = {
         id: rule ? getTokenAt(tokens, rule.id) : getTokenAt(tokens, 1),
-        name: `${nameOriginal}${employeeID ? `-${employeeID}` : `-${phoneOriginal}`}`,
+        name: `${nameOriginal}${employeeID ? `-${employeeID}` : ""}`,
         nameOriginal,
         extendedID,
         phoneClean: onlyDigits(phoneOriginal),
@@ -472,7 +475,7 @@
         position,
         site,
         division,
-        adsdExpiration,
+        adsdExpiration: normalizeDate(adsdExpiration),
       };
 
       // Mapping to Selectors
@@ -530,19 +533,19 @@
         dispatchEvents(notiEmailInput);
       }
       if (employeeIDInput) {
-        employeeIDInput.value = data.employeeID;
+        employeeIDInput.value = data.employeeID || "0";
         dispatchEvents(employeeIDInput);
       }
       if (driverMobileInput) {
-        driverMobileInput.value = data.phoneClean;
+        driverMobileInput.value = data.phoneClean || "0";
         dispatchEvents(driverMobileInput);
       }
       if (uIDInput) {
         uIDInput.value = data.extendedID;
         dispatchEvents(uIDInput);
       }
-      if (positionInput && data.position) {
-        positionInput.value = data.position;
+      if (positionInput) {
+        positionInput.value = data.position || "x";
         dispatchEvents(positionInput);
       }
       if (siteInput && data.site) {
