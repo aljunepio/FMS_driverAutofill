@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         FMS Tech Autofill (More rows)
+// @name         FMS Tech Autofill (VTS)
 // @match        https://uae.fms-tech.com/BBIS/Fleet/Driver/*NewDriver*
 // @match        https://vts.adnocdistribution.ae/VTS/Fleet/Driver/*NewDriver*
 // @grant        none
@@ -73,7 +73,7 @@
 	}
 
 	function isSAP(token) {
-		return isNumeric(token) && Number(token) >= 2900 && Number(token) <= 3200;
+		return isNumeric(token) && Number(token) >= 2900 && Number(token) <= 3500;
 	}
 
 	function isVTS(token) {
@@ -121,24 +121,26 @@
 		const selectEl = document.querySelector("#basicInfo_customerId");
 		if (!selectEl) return;
 
-		// Filter out empty/placeholder options
-		const validOptions = Array.from(selectEl.options).filter(opt => opt.value !== "" && opt.text.toLowerCase() !== "please select");
+		const options = Array.from(selectEl.options);
+		const validOptions = options.filter(opt => opt.value !== "" && opt.text.toLowerCase() !== "please select");
+		const adnocOption = options.find(opt => /adnoc/i.test(opt.text) || opt.value === "2");
+		const targetOption = adnocOption || (validOptions.length === 1 ? validOptions[0] : null);
 
-		// ONLY fill if there is exactly 1 valid option
-		if (validOptions.length === 1) {
-			selectEl.value = validOptions[0].value;
+		if (!targetOption) return;
 
-			// Trigger native events so the UI updates
+		const targetValue = targetOption.value;
+		if (selectEl.value !== targetValue) {
+			selectEl.value = targetValue;
 			selectEl.dispatchEvent(new Event('change', { bubbles: true }));
 
-			// If Bootstrap Select is being stubborn, this manual trigger usually fixes it:
 			const btn = selectEl.closest('.bootstrap-select')?.querySelector('button');
 			if (btn) {
 				const filterText = btn.querySelector('.filter-option-inner-inner');
-				if (filterText) filterText.textContent = validOptions[0].text;
+				if (filterText) filterText.textContent = targetOption.text;
 			}
-			console.log("✅ Auto-selected the only available company:", validOptions[0].text);
 		}
+
+		console.log("✅ Company selected:", targetOption.text);
 	}
 
 	function updateUI() {
@@ -299,7 +301,7 @@
 			if (!data.name && isName(token)) { data.name = token; data.nameOriginal = token; continue; }
 		}
 		if (data.name && (data.phoneOriginal || data.vts)) {
-			data.name = `${data.name} - ${data.phoneOriginal || data.vts}`;
+			data.name = `${data.name} - ${data.vts || data.phoneOriginal}`;
 		}
 		return data;
 	}
