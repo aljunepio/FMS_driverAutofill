@@ -14,6 +14,7 @@
   const btn = document.createElement("button");
   btn.textContent = "📋 Paste Excel Row";
   btn.id = "pasteRow";
+  let pasteInProgress = false;
 
   Object.assign(btn.style, {
     position: "fixed",
@@ -41,6 +42,17 @@
 
   function isDateLike(s) {
     return /^(?:\d{1,4}[\/\-.]\d{1,2}[\/\-.]\d{1,4})$/.test(s);
+  }
+
+  function sanitizeCell(value) {
+    if (value === null || value === undefined) return "";
+
+    return String(value)
+      .replace(/</g, "")
+      .replace(/>/g, "")
+      .replace(/\r?\n|\r/g, " / ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
   }
 
   function isPhone(token) {
@@ -266,46 +278,6 @@
     );
   }
 
-  /* ==============================
-   NEW: SMART QUEUE WATCHER
-============================== */
-
-  function isPreloaderHidden() {
-    const preloader = document.querySelector("#preloader");
-    if (!preloader) return true; // fail-safe
-    return window.getComputedStyle(preloader).display === "none";
-  }
-
-  function isPasteButtonVisible() {
-    const btn = document.querySelector("#pasteRow");
-    if (!btn) return false;
-    return btn.offsetParent !== null; // visible in DOM
-  }
-
-  async function waitForQueueAndUIReady() {
-    console.log("👀 Watching for queue + UI readiness...");
-
-    while (true) {
-      let queue = JSON.parse(localStorage.getItem("fms_fill_queue") || "[]");
-
-      if (queue.length > 0 && isPreloaderHidden() && isPasteButtonVisible()) {
-        console.log("✅ UI Ready + Queue found:", queue.length);
-
-        const rowData = queue.shift();
-        localStorage.setItem("fms_fill_queue", JSON.stringify(queue));
-
-        await wait(1000); // small buffer
-        processRowData(rowData);
-        break;
-      }
-
-      await wait(400); // polling interval
-    }
-  }
-
-  // Start watcher immediately (instead of onLoad)
-  waitForQueueAndUIReady();
-
   function waitForAccessCardMatchAndSave() {
     const interval = setInterval(() => {
       const selectEl = document.querySelector("#basicInfo_accesscard");
@@ -350,26 +322,34 @@
      UPDATED MAIN LOGIC
   ============================== */
   async function fillFromClipboard() {
+    if (pasteInProgress) return;
+
+    pasteInProgress = true;
+    btn.disabled = true;
+    btn.style.opacity = "0.65";
+    btn.style.cursor = "not-allowed";
+
     try {
       const raw = await navigator.clipboard.readText();
       if (!raw || raw.trim() === "") return;
 
-      const rows = raw
+      const firstRow = raw
         .trim()
         .split(/\r?\n/)
-        .filter((r) => r.trim() !== "");
-      const allRowsData = rows.map((row) => parseRow(row));
+        .find((r) => r.trim() !== "");
 
-      // 1. Claim the first row for THIS tab
-      const firstRow = allRowsData.shift();
+      if (!firstRow) return;
 
-      // 2. Save the remaining rows to the queue
-      localStorage.setItem("fms_fill_queue", JSON.stringify(allRowsData));
-
-      // 3. Process the first row
-      processRowData(firstRow);
+      processRowData(parseRow(firstRow));
     } catch (err) {
       console.error("Clipboard Error:", err);
+    } finally {
+      setTimeout(() => {
+        pasteInProgress = false;
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.cursor = "pointer";
+      }, 2000);
     }
   }
 
@@ -377,7 +357,7 @@
   function parseRow(rowText) {
     const tokens = rowText
       .split(/\t/)
-      .map((t) => t.replace(/\u00A0/g, " ").trim());
+      .map((t) => sanitizeCell(t.replace(/\u00A0/g, " ").trim()));
 
     // 🔥 Find "~" marker
     const tildeIndex = tokens.findIndex((t) => t === "~");
@@ -534,17 +514,6 @@
         dispatchEvents(accessInput);
       }
     }, 1200);
-
-    // --- SEQUENTIAL STEP: Check for next row after 2 seconds ---
-    setTimeout(() => {
-      let queue = JSON.parse(localStorage.getItem("fms_fill_queue") || "[]");
-      if (queue.length > 0) {
-        console.log("Opening next tab for remaining rows:", queue.length);
-        window.open(window.location.href, "_blank");
-      } else {
-        console.log("Queue empty. Sequential processing finished.");
-      }
-    }, 2000); // Adjust this timing if you want the next tab to wait longer
 
     // --- AUTO-SAVE after 3 seconds ---
     setTimeout(() => {
