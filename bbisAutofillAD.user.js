@@ -56,14 +56,6 @@
     return isNumeric(token) && Number(token) > 0 && Number(token) < 70000;
   }
 
-  function isSAP(token) {
-    return isNumeric(token) && Number(token) >= 2900 && Number(token) <= 3200;
-  }
-
-  function isVTS(token) {
-    return isNumeric(token) && Number(token) > 100000 && Number(token) < 900000;
-  }
-
   function isName(token) {
     if (!containsLetters(token)) return false;
     if (isDateLike(token)) return false;
@@ -407,8 +399,6 @@
       nameOriginal: "",
       phoneClean: "",
       phoneOriginal: "",
-      sap: "",
-      vts: "",
       adnoc: adnocTokens,
     };
 
@@ -417,16 +407,6 @@
 
       if (!data.id && isId(token)) {
         data.id = token;
-        continue;
-      }
-
-      if (!data.sap && isSAP(token)) {
-        data.sap = token;
-        continue;
-      }
-
-      if (!data.vts && isVTS(token)) {
-        data.vts = token;
         continue;
       }
 
@@ -443,8 +423,8 @@
       }
     }
 
-    if (data.name && (data.phoneOriginal || data.vts)) {
-      data.name = `${data.name} - ${data.phoneOriginal || data.vts}`;
+    if (data.name && data.phoneOriginal) {
+      data.name = `${data.name} - ${data.phoneOriginal}`;
     }
 
     return data;
@@ -455,7 +435,6 @@
      UPDATED: PROCESS ROW DATA (OPENS NEXT TAB AT END)
   ============================== */
   async function processRowData(data) {
-    console.log(data.adnoc, "!!!!adnoc");
     const idInput = document.querySelector("#basicInfo_code");
     const nameInput = document.querySelector("#basicInfo_name");
     const phoneInput = document.querySelector("#basicInfo_phone1");
