@@ -71,33 +71,49 @@
   }
 
   const companyIndexMap = {
+    ADNOC_Drilling: {
+      id: 0,
+      nameOriginal: 1,
+      employeeID: 3,
+      extendedID: "",
+      phoneOriginal: 2,
+      driverLiceID: 10,
+      dlExpiration: 11,
+      email: "",
+      position: 6,
+      site: 7,
+      division: 4,
+      adsdExpiration: 9,
+    },
     ADNOC_GAS: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
       extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 13,
-      dlExpiration: 14,
-      email: 8,
-      position: 12,
-      site: 6,
-      division: 5,
-      adsdExpiration: 15,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
     },
     BOROUGE: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
-      extendedID: 7,
+      extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 10,
-      dlExpiration: 11,
-      email: 8,
-      position: 13,
-      site: "",
-      division: 5,
-      adsdExpiration: 14,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
     },
     ADNOC_HQ: {
       id: 1,
@@ -119,55 +135,58 @@
       employeeID: 4,
       extendedID: 8,
       phoneOriginal: 3,
-      driverLiceID: 10,
-      dlExpiration: 11,
-      email: 12,
-      position: 9,
+      driverLiceID: 12,
+      dlExpiration: 13,
+      email: 14,
+      position: 11,
       site: 5,
       division: 6,
-      adsdExpiration: 13,
+      adsdExpiration: 16,
     },
     ADNOC_LOGISTIC_SERVICES: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
-      extendedID: 11,
+      extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 13,
-      dlExpiration: 14,
-      email: 9,
-      position: 12,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
       site: 7,
       division: 6,
-      adsdExpiration: 15,
+      department: 11,
+      adsdExpiration: 16,
     },
     ADNOC_OFFSHORE: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
-      extendedID: 10,
+      extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 12,
-      dlExpiration: 13,
-      email: 11,
-      position: 9,
-      site: 8,
-      division: 5,
-      adsdExpiration: 14,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
     },
     ADNOC_REFINING: {
       id: 1,
       nameOriginal: 2,
       employeeID: 4,
-      extendedID: 8,
+      extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 12,
-      dlExpiration: 13,
-      email: 10,
-      position: 9,
-      site: 6,
-      division: 5,
-      adsdExpiration: 14,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
     },
     ADNOC_FERTILE: {
       id: 1,
@@ -189,13 +208,13 @@
       employeeID: 4,
       extendedID: 9,
       phoneOriginal: 3,
-      driverLiceID: 11,
-      dlExpiration: 12,
+      driverLiceID: 12,
+      dlExpiration: 13,
       email: 8,
-      position: 10,
-      site: 6,
-      division: 5,
-      adsdExpiration: 13,
+      position: 11,
+      site: 5,
+      division: 6,
+      adsdExpiration: 14,
     },
     ADNOC_GT: {
       id: 0,
@@ -254,11 +273,11 @@
       adsdExpiration: 14,
     },
     AL_MARIAH: {
-      id: 1,
-      nameOriginal: 3,
-      employeeID: 4,
+      id: 0,
+      nameOriginal: 2,
+      employeeID: 3,
       extendedID: 6,
-      phoneOriginal: 5,
+      phoneOriginal: 4,
       driverLiceID: 9,
       dlExpiration: 10,
       email: "",
@@ -266,6 +285,78 @@
       site: 7,
       division: 7,
       adsdExpiration: 11,
+    },
+    ADCS: {
+      id: 0,
+      nameOriginal: 3,
+      employeeID: 4,
+      extendedID: 7,
+      phoneOriginal: 6,
+      driverLiceID: 10,
+      dlExpiration: 11,
+      email: "",
+      position: 9,
+      site: 8,
+      division: "",
+      adsdExpiration: 12,
+    },
+    ADNOC_Onshore1: {
+      id: 0,
+      nameOriginal: 2,
+      employeeID: 3,
+      extendedID: 6,
+      phoneOriginal: 4,
+      driverLiceID: 9,
+      dlExpiration: 10,
+      email: "",
+      position: 8,
+      site: 7,
+      division: 7,
+      adsdExpiration: 11,
+    },
+    AL_GHAZAL: {
+      id: 0,
+      nameOriginal: 2,
+      employeeID: 3,
+      extendedID: 6,
+      phoneOriginal: 4,
+      driverLiceID: 9,
+      dlExpiration: 10,
+      email: "",
+      position: 8,
+      site: 7,
+      division: 7,
+      adsdExpiration: 11,
+    },
+    ADNOC_DISTRIBUTION: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 9,
+      phoneOriginal: 3,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
+    },
+    ADNOC_SOUR_GAS: {
+      id: 1,
+      nameOriginal: 2,
+      employeeID: 4,
+      extendedID: 9,
+      phoneOriginal: 3,
+      driverLiceID: 14,
+      dlExpiration: 15,
+      email: 12,
+      position: 10,
+      site: 7,
+      division: 6,
+      department: 11,
+      adsdExpiration: 16,
     },
   };
 
@@ -456,6 +547,7 @@
       const position = rule ? getTokenAt(tokens, rule.position) : "";
       const site = rule ? getTokenAt(tokens, rule.site) : "";
       const division = rule ? getTokenAt(tokens, rule.division) : "";
+      const department = rule ? getTokenAt(tokens, rule?.department) : "";
       const adsdExpiration = rule
         ? getTokenAt(tokens, rule.adsdExpiration)
         : "";
@@ -475,6 +567,7 @@
         position,
         site,
         division,
+        department,
         adsdExpiration: normalizeDate(adsdExpiration),
       };
 
@@ -492,23 +585,25 @@
       //   "#basicInfo_notificationEmails",
       // );
       const employeeIDInput = getDynamicInputByLabel("Employee ID");
-      const driverMobileInput = getDynamicInputByLabel("Driver Mobile");
+      const driverMobileInput = getDynamicInputByLabel("DRIVER_MOBILE");
       const uIDInput = getDynamicInputByLabel("UID Number");
       const positionInput = getDynamicInputByLabel("Position");
       const siteInput = getDynamicInputByLabel("Site");
       const divisionInput = getDynamicInputByLabel("Division");
+      const departmentInput = getDynamicInputByLabel("Department-1");
       const adsdExpireInput = getDynamicInputByLabel("ADSD expiry date");
       const notiEmailInput = getDynamicInputByLabel("Notification Emails");
+      // const accessExpire = getDynamicInputByLabel("Access Card Expiration Date");
 
-      if (idInput) {
-        idInput.value = data.id;
-        dispatchEvents(idInput);
-      }
+      // if (idInput) {
+      //   idInput.value = data.id;
+      //   dispatchEvents(idInput);
+      // }
       if (nameInput) {
         nameInput.value = data.name;
         dispatchEvents(nameInput);
       }
-      if (extendInput) {
+      if (extendInput && data.extendedID) {
         extendInput.value = data.extendedID;
         dispatchEvents(extendInput);
       }
@@ -556,28 +651,36 @@
         divisionInput.value = data.division;
         dispatchEvents(divisionInput);
       }
+      if (departmentInput && data.department) {
+        departmentInput.value = data.department;
+        dispatchEvents(departmentInput);
+      }
       if (adsdExpireInput && data.adsdExpiration) {
         adsdExpireInput.value = data.adsdExpiration;
         dispatchEvents(adsdExpireInput);
+      }
+      if (accessExpire && data.adsdExpiration) {
+        accessExpire.value = data.adsdExpiration;
+        dispatchEvents(accessExpire);
       }
 
       alert(`Index[5] value: "${getTokenAt(tokens, 5)}"\nDetected company: "${companyLabel || "Unknown"}"\nID: ${data.id}\nName: ${data.nameOriginal}\nPhone: ${data.phoneOriginal}\nEmail: ${data.email}`);
 
       logPasteAction(data);
 
-      const newBtn = [...document.querySelectorAll("a.btn.btn-primary")].find(
-        (a) =>
-          a.getAttribute("onclick")?.includes("DriverHelper.NewAccessCard"),
-      );
-      if (newBtn) newBtn.click();
-
-      setTimeout(() => {
-        const accessInput = document.querySelector("#accessCardCode");
-        if (accessInput) {
-          accessInput.value = data.id;
-          dispatchEvents(accessInput);
-        }
-      }, 1000);
+      //      const newBtn = [...document.querySelectorAll("a.btn.btn-primary")].find(
+      //        (a) =>
+      //          a.getAttribute("onclick")?.includes("DriverHelper.NewAccessCard"),
+      //      );
+      //      if (newBtn) newBtn.click();
+      //
+      //      setTimeout(() => {
+      //        const accessInput = document.querySelector("#accessCardCode");
+      //        if (accessInput) {
+      //         accessInput.value = data.id;
+      //          dispatchEvents(accessInput);
+      //        }
+      //      }, 1000);
     } catch (err) {
       console.error("Autofill Error:", err);
     }
